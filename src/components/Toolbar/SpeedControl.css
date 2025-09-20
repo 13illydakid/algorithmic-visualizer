@@ -1,0 +1,18 @@
+.speed-control { display:flex; align-items:center; gap:24px; outline:none; }
+.speed-control.is-focused { box-shadow:0 0 0 3px rgba(0,150,255,.4); border-radius:8px; }
+.speed-control.is-disabled { opacity:.5; pointer-events:none; }
+
+.sc-vertical { display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; height:220px; position:relative; padding:4px 0; }
+.sc-mark { background:none; border:none; padding:2px 8px 2px 0; cursor:pointer; display:flex; align-items:center; gap:6px; font:500 12px/1 'Inter', system-ui; color:var(--clr-text,#222); position:relative; }
+.sc-mark .sc-dot { width:10px; height:10px; border:2px solid var(--clr-accent-1,#4ea7ff); border-radius:50%; background:var(--clr-surface,#fff); transition:.2s; }
+.sc-mark.active .sc-dot { background:var(--clr-accent-1,#4ea7ff); transform:scale(1.2); }
+.sc-mark.active .sc-label { font-weight:600; color:var(--clr-accent-1,#4ea7ff); }
+.sc-mark:focus-visible { outline:none; text-decoration:underline; }
+.sc-mark:hover .sc-dot { background:var(--clr-accent-1,#4ea7ff); }
+
+/* Gauge */
+.sc-gauge { width:140px; height:70px; position:relative; }
+.sc-gauge-arc { position:absolute; inset:0; border:6px solid var(--clr-surface-alt,#d9d9d9); border-bottom:none; border-top-left-radius:140px; border-top-right-radius:140px; }
+.sc-gauge-hand { position:absolute; left:50%; bottom:0; width:4px; height:78px; background:linear-gradient(var(--clr-accent-1,#4ea7ff), var(--clr-accent-2,#ff4081)); transform-origin:50% 100%; border-radius:2px; box-shadow:0 0 8px -2px rgba(0,0,0,.4); transition:transform .35s cubic-bezier(.4,.8,.3,1.2); }
+
+@media (prefers-reduced-motion: reduce) { .sc-gauge-hand { transition:none; } }

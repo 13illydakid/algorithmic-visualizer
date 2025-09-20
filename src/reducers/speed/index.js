@@ -1,9 +1,11 @@
 import { createAction, handleActions } from "redux-actions";
 
 export const SET_SPEED = "SET_SPEED";
-export const setSpeed = createAction(SET_SPEED); // payload: number (ms delay)
+// payload: number representing speed multiplier (e.g., 1,3,5,...)
+export const setSpeed = createAction(SET_SPEED);
 
-const initialState = 50; // default slider value (we'll map to ms)
+// Default speed multiplier (5x)
+const initialState = 5;
 
 export const speed = handleActions({
   SET_SPEED: (state, { payload }) => payload,

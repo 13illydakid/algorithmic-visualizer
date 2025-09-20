@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Toolbar.css";
+import SpeedControl from "./SpeedControl.jsx";
 
 class Toolbar extends Component {
   constructor(props) {
@@ -70,12 +71,18 @@ class Toolbar extends Component {
   };
 
   render() {
-    const { array, algorithm, generateArray, sort, isRunning, paused } =
-      this.props;
+    const {
+      array,
+      algorithm,
+      generateArray,
+      sort,
+      isRunning,
+      paused,
+      speed,
+      setSpeed,
+    } = this.props;
     const { rangeValue } = this.state;
 
-    const speed =
-      570 - Math.pow(array.length, 2) > 0 ? 570 - Math.pow(array.length, 2) : 0;
     const color = isRunning ? "rgba(214, 29, 29, 0.8)" : "white";
     const cursor = isRunning ? "auto" : "pointer";
 
@@ -87,6 +94,11 @@ class Toolbar extends Component {
           role="group"
           aria-label="Array controls"
         >
+          <SpeedControl
+            value={speed}
+            onChange={(val) => setSpeed(val)}
+            disabled={isRunning}
+          />
           <label htmlFor="changeSize" id="arraySize" style={{ color }}>
             Array Size
           </label>

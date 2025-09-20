@@ -29,6 +29,8 @@ import { setShellGap, setShellIndices } from "../../reducers/shellSort";
 import { setCurrentBucket } from "../../reducers/bucketSort";
 import { setCurrentCountIndex } from "../../reducers/countingSort";
 import { incComparisons, incSwaps } from "../../reducers/stats";
+import { setSpeed } from '../../reducers/speed';
+import { computeDelay } from '../../utils/speedMapping';
 
 // speed reducer imported in root; value accessed via mapStateToProps
 
@@ -76,6 +78,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setCurrentSorted([]));
   },
 
+  setSpeed: (multiplier) => dispatch(setSpeed(multiplier)),
+
   updateSelectedAlgorithms: (algos) => dispatch(setSelectedAlgorithms(algos)),
 
   updateAlgorithm: (algorithm) => {
@@ -89,18 +93,18 @@ const mapDispatchToProps = (dispatch) => ({
     }
   },
 
-  sort: (algorithm, array, legacySpeed) => {
+  sort: (algorithm, array) => {
     const fn = SORT_MAP[algorithm];
     if (!fn) return;
     dispatch(setCurrentSorted([]));
     dispatch(setRunning(true));
     const state = store.getState();
-    const mappedDelay = Math.max(0, 600 - state.speed * 6);
+    const delay = computeDelay(state.speed);
     if (algorithm === 'bubbleSort' || algorithm === 'quickSort' || algorithm === 'mergeSort' || algorithm === 'heapSort' || algorithm === 'insertionSort' || algorithm === 'selectionSort' || algorithm === 'shellSort' || algorithm === 'countingSort' || algorithm === 'bucketSort' || algorithm === 'radixSort') {
       const { events } = fn(array);
-      playCentral(events, dispatch, store.getState, mappedDelay, algorithm);
+      playCentral(events, dispatch, store.getState, delay, algorithm);
     } else {
-      fn(array, dispatch, mappedDelay ?? legacySpeed);
+      fn(array, dispatch, delay);
     }
   },
 });
@@ -112,7 +116,7 @@ function playCentral(events, dispatch, getState, baseDelay, algorithm) {
   activeQueue = new DispatchQueue({
     dispatch,
     getState,
-    delayProvider: () => baseDelay,
+    delayProvider: () => computeDelay(getState().speed),
     onComplete: () => dispatch(setRunning(false)),
   });
   const sortedSet = new Set(getState().currentSorted || []);
@@ -125,9 +129,6 @@ function playCentral(events, dispatch, getState, baseDelay, algorithm) {
         else if (algorithm === 'heapSort') dispatch(setCurrentHeapThree(e.indices));
         else if (algorithm === 'insertionSort') dispatch(setCurrentInsertion(e.indices));
         else if (algorithm === 'selectionSort') {
-          // e.indices[0] = current min candidate, e.indices[1] = j
-          // reuse selectionSort reducer: store pair
-          // selectionSortPivot can keep current min index
           const [minIdx, jIdx] = e.indices;
           dispatch(selectionSortPivot(minIdx));
           dispatch(selectionSortState([minIdx, jIdx]));
@@ -160,10 +161,7 @@ function playCentral(events, dispatch, getState, baseDelay, algorithm) {
         dispatch(setShellGap(e.gap));
         break;
       }
-      case 'digitPhase': {
-        // Placeholder: could dispatch digit phase to a reducer for UI (not yet implemented)
-        break;
-      }
+      case 'digitPhase': { break; }
       case 'finalizeElement': {
         if (!sortedSet.has(e.index)) {
           sortedSet.add(e.index);

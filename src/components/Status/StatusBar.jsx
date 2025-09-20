@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./StatusBar.css";
+import { computeDelay } from "../../utils/speedMapping";
 
 function StatusBar(props) {
   const {
@@ -13,7 +14,7 @@ function StatusBar(props) {
     currentCountIndex,
     paused,
   } = props;
-  const delay = Math.max(0, 600 - speed * 6);
+  const delay = computeDelay(speed);
   return (
     <div className="status-bar" role="status" aria-live="polite">
       <div className="status-section">
