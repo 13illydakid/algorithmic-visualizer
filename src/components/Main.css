@@ -35,6 +35,19 @@ code {
   transition: margin 0.3s ease;
 }
 
+.top-meta-cluster {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 24px;
+}
+
+.top-meta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
 .arrayContainer.withInfo {
-  margin-left: 33vw; /* same width as #mergeInfoContainer */
+  margin-left: 0;
 }

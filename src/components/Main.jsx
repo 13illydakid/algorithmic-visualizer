@@ -5,26 +5,23 @@ import Legend from "./Status/Legend.jsx";
 import Body from "./Body/BodyContainer.js";
 import "./Main.css";
 import Sidebar from "./Sidebar/SidebarContainer.js";
+import ProgressBar from "./Status/ProgressBar.jsx";
 
 class Main extends Component {
   render() {
-    const { algorithm } = this.props;
-    // const showMergeInfo = algorithm === "mergeSort";
-    const showInfo = [
-      "mergeSort",
-      "quickSort",
-      "heapSort",
-      "bubbleSort",
-    ].includes(algorithm);
-
     return (
       <div>
         <Toolbar />
-        <StatusBar />
-        <Legend />
+        <div className="top-meta-cluster">
+          <div className="top-meta-inner">
+            <StatusBar />
+            <Legend />
+            <ProgressBar />
+          </div>
+        </div>
         <div className="mainContainer">
           <Sidebar />
-          <div className={`arrayContainer ${showInfo ? "withInfo" : ""}`}>
+          <div className={`arrayContainer`}>
             <Body />
           </div>
         </div>

@@ -12,7 +12,7 @@ class Sidebar extends Component {
   };
 
   renderInfoPanel() {
-    const { algorithm } = this.props;
+    const { algorithm, array, speed, sortFromInfo, isRunning } = this.props;
     if (!algorithm) return null;
     return (
       <div
@@ -20,7 +20,12 @@ class Sidebar extends Component {
         aria-live="polite"
         aria-label={`${algorithm} information panel`}
       >
-        <AlgorithmInfo id={algorithm} />
+        <AlgorithmInfo
+          id={algorithm}
+          canSort={!isRunning}
+          isRunning={isRunning}
+          onSort={() => sortFromInfo(algorithm, array, speed)}
+        />
       </div>
     );
   }

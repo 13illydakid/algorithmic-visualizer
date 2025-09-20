@@ -49,6 +49,20 @@ export default class DispatchQueue {
     }
     const fn = this.events[this.index++];
     fn();
+    // progress update (throttled every 200ms)
+    const now = Date.now();
+    if (!this._lastProgressTs || now - this._lastProgressTs >= 200) {
+      this._lastProgressTs = now;
+      try {
+        const st = this.getState();
+        const total = st.array.length || 1;
+        const sorted = (st.currentSorted || []).length;
+        const pct = Math.min(100, Math.round((sorted / total) * 100));
+        if (st.progress !== pct && !isNaN(pct)) {
+          this.dispatch({ type: 'SET_PROGRESS', payload: pct });
+        }
+      } catch (e) { /* silent */ }
+    }
     setTimeout(() => this.step(), this.delayProvider());
   }
 }

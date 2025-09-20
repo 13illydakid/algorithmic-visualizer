@@ -86,7 +86,7 @@ const descriptions = {
   },
 };
 
-const AlgorithmInfo = ({ id }) => {
+const AlgorithmInfo = ({ id, onSort, canSort, isRunning }) => {
   const meta = algorithmsMeta.find((a) => a.id === id);
   if (!meta) return null;
   const copy = descriptions[id];
@@ -96,7 +96,19 @@ const AlgorithmInfo = ({ id }) => {
       role="article"
       aria-labelledby={`algo-title-${id}`}
     >
-      <h2 id={`algo-title-${id}`}>{meta.label}</h2>
+      <div className="algo-info-header-row">
+        <h2 id={`algo-title-${id}`}>{meta.label}</h2>
+        {canSort && (
+          <button
+            className="button-primary algo-info-sort-btn"
+            disabled={isRunning}
+            onClick={onSort}
+            aria-label={`Sort using ${meta.label}`}
+          >
+            Sort
+          </button>
+        )}
+      </div>
       <p className="intro">{copy?.intro}</p>
       {copy?.notes && (
         <ul className="notes">

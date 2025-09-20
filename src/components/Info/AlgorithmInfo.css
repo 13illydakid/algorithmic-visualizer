@@ -4,3 +4,5 @@
 .algo-info ul.notes { margin:12px 0 16px 18px; padding:0; }
 .algo-info ul.notes li { margin-bottom:6px; }
 .metrics-wrapper { margin-top:10px; }
+.algo-info-header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+.algo-info-sort-btn { margin-top:4px; }

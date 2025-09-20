@@ -17,6 +17,7 @@ import { shellGap, shellIndices } from "./shellSort";
 import { speed } from "./speed";
 import { paused } from "./paused";
 import { stats } from "./stats";
+import { progress } from "./progress";
 
 const rootReducer = combineReducers({
   array,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   speed,
   paused,
   stats,
+  progress,
 });
 
 export default rootReducer;

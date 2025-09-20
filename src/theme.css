@@ -139,3 +139,7 @@ input[type=range]:active::-webkit-slider-thumb { transform:scale(.85); }
 .table-metrics th, .table-metrics td { padding:6px 8px; text-align:left; border-bottom:1px solid var(--clr-border); }
 .table-metrics th { font-weight:600; color: var(--clr-text); }
 .table-metrics td { color: var(--clr-text-dim); }
+
+/* Overrides to force bottom horizontal sidebar */
+body #sortSidebar { all: unset; position:fixed; bottom:0; left:0; right:0; height:70px; display:flex; justify-content:center; align-items:center; gap:34px; background:#1f2c3c; padding:0 24px; z-index:60; }
+body #sortSidebar .sortOption, body #sortSidebar .sortOption-selected { writing-mode:horizontal-tb; transform:none; font:600 14px/1 'Inter'; padding:8px 14px; }

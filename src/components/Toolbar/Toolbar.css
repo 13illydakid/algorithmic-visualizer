@@ -13,6 +13,27 @@
 #toolbar-content {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
 }
 
 #arraySize,

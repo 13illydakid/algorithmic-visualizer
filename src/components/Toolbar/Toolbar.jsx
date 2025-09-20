@@ -71,16 +71,8 @@ class Toolbar extends Component {
   };
 
   render() {
-    const {
-      array,
-      algorithm,
-      generateArray,
-      sort,
-      isRunning,
-      paused,
-      speed,
-      setSpeed,
-    } = this.props;
+    const { array, generateArray, isRunning, paused, speed, setSpeed } =
+      this.props;
     const { rangeValue } = this.state;
 
     const color = isRunning ? "rgba(214, 29, 29, 0.8)" : "white";
@@ -90,138 +82,130 @@ class Toolbar extends Component {
       <header id="toolbar" role="banner" aria-label="Sorting controls toolbar">
         <div
           id="toolbar-content"
-          className="u-flex u-gap-md"
           role="group"
-          aria-label="Array controls"
+          aria-label="Sorting toolbar groups"
         >
-          <SpeedControl
-            value={speed}
-            onChange={(val) => setSpeed(val)}
-            disabled={isRunning}
-          />
-          <label htmlFor="changeSize" id="arraySize" style={{ color }}>
-            Array Size
-          </label>
-
-          <div className="slider-container" aria-live="off">
-            <button
-              className="slider-button negative"
-              aria-label="Decrease array size"
-              style={{ cursor }}
-              disabled={isRunning}
-              onClick={() => {
-                if (rangeValue > 0) {
-                  const newValue = parseInt(rangeValue, 10) - 1;
-                  this.setState({ rangeValue: newValue });
-                  this.handleChange({ target: { value: newValue } });
+          <div className="toolbar-left">
+            <div
+              id={!isRunning ? "generateArray" : "generateArrayX"}
+              className="refresh-icon"
+              style={{ color: color, cursor: cursor }}
+              onClick={
+                !isRunning ? () => generateArray(array.length) : undefined
+              }
+              title="Generate new array"
+              role="button"
+              aria-label="Generate new random array"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (!isRunning && (e.key === "Enter" || e.key === " ")) {
+                  generateArray(array.length);
                 }
               }}
             >
-              -
-            </button>
-            <input
-              id="changeSize"
-              type="range"
-              min="0"
-              max="100"
-              value={rangeValue}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={rangeValue}
-              aria-label="Array size slider"
-              style={{ background: color, cursor }}
-              disabled={isRunning}
-              onChange={this.handleChange}
-            />
-            <button
-              className="slider-button positive"
-              aria-label="Increase array size"
-              style={{ cursor }}
-              disabled={isRunning}
-              onClick={() => {
-                if (rangeValue < 100) {
-                  const newValue = parseInt(rangeValue, 10) + 1;
-                  this.setState({ rangeValue: newValue });
-                  this.handleChange({ target: { value: newValue } });
-                }
-              }}
-            >
-              +
-            </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                width="24"
+                viewBox="3 -2 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1 2.13-9" />
+              </svg>
+            </div>
           </div>
-          <span
-            aria-label="Current array length"
-            style={{ fontFamily: "Inter", fontSize: 14 }}
-          >
-            {array.length}
-          </span>
-          <div className="separator" aria-hidden="true" />
+          <div className="toolbar-center">
+            <label htmlFor="changeSize" id="arraySize" style={{ color }}>
+              Array Size
+            </label>
 
-          {algorithm && (
-            <button
-              id="sort"
-              className="button-primary"
+            <div className="slider-container" aria-live="off">
+              <button
+                className="slider-button negative"
+                aria-label="Decrease array size"
+                style={{ cursor }}
+                disabled={isRunning}
+                onClick={() => {
+                  if (rangeValue > 0) {
+                    const newValue = parseInt(rangeValue, 10) - 1;
+                    this.setState({ rangeValue: newValue });
+                    this.handleChange({ target: { value: newValue } });
+                  }
+                }}
+              >
+                -
+              </button>
+              <input
+                id="changeSize"
+                type="range"
+                min="0"
+                max="100"
+                value={rangeValue}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={rangeValue}
+                aria-label="Array size slider"
+                style={{ background: color, cursor }}
+                disabled={isRunning}
+                onChange={this.handleChange}
+              />
+              <button
+                className="slider-button positive"
+                aria-label="Increase array size"
+                style={{ cursor }}
+                disabled={isRunning}
+                onClick={() => {
+                  if (rangeValue < 100) {
+                    const newValue = parseInt(rangeValue, 10) + 1;
+                    this.setState({ rangeValue: newValue });
+                    this.handleChange({ target: { value: newValue } });
+                  }
+                }}
+              >
+                +
+              </button>
+            </div>
+            <span
+              aria-label="Current array length"
+              style={{ fontFamily: "Inter", fontSize: 14 }}
+            >
+              {array.length}
+            </span>
+            <div className="separator" aria-hidden="true" />
+            {this.state.sorted && !isRunning && (
+              <button
+                id="rewind"
+                className="button-ghost"
+                style={{ cursor }}
+                onClick={this.rewindArray}
+              >
+                Rewind
+              </button>
+            )}
+            {isRunning && (
+              <button
+                className="button-ghost"
+                onClick={this.togglePause}
+                aria-pressed={paused}
+                aria-label={paused ? "Resume animation" : "Pause animation"}
+                style={{ cursor: "pointer" }}
+              >
+                {paused ? "Resume" : "Pause"}
+              </button>
+            )}
+          </div>
+          <div className="toolbar-right">
+            <SpeedControl
+              value={speed}
+              onChange={(val) => setSpeed(val)}
               disabled={isRunning}
-              style={{ cursor }}
-              onClick={() => {
-                this.setState({ originalArray: [...array], sorted: true });
-                sort(algorithm, array, speed);
-              }}
-            >
-              Sort
-            </button>
-          )}
-          {this.state.sorted && !isRunning && (
-            <button
-              id="rewind"
-              className="button-ghost"
-              style={{ cursor }}
-              onClick={this.rewindArray}
-            >
-              Rewind
-            </button>
-          )}
-          {isRunning && (
-            <button
-              className="button-ghost"
-              onClick={this.togglePause}
-              aria-pressed={paused}
-              aria-label={paused ? "Resume animation" : "Pause animation"}
-              style={{ cursor: "pointer" }}
-            >
-              {paused ? "Resume" : "Pause"}
-            </button>
-          )}
-        </div>
-        <div
-          id={!isRunning ? "generateArray" : "generateArrayX"}
-          className="refresh-icon"
-          style={{ color: color, cursor: cursor, marginLeft: "auto" }}
-          onClick={!isRunning ? () => generateArray(array.length) : undefined}
-          title="Generate new array"
-          role="button"
-          aria-label="Generate new random array"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (!isRunning && (e.key === "Enter" || e.key === " ")) {
-              generateArray(array.length);
-            }
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            width="24"
-            viewBox="3 -2 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="23 4 23 10 17 10" />
-            <path d="M20.49 15a9 9 0 1 1 2.13-9" />
-          </svg>
+            />
+          </div>
         </div>
       </header>
     );
