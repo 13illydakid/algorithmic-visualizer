@@ -1,0 +1,6 @@
+.algo-info { font: 400 14px/1.55 'Inter', system-ui, sans-serif; color: var(--clr-text-dim); }
+.algo-info .intro { margin-top:0; color: var(--clr-text); font-weight:500; }
+.algo-info h2 { margin:0 0 12px; font:700 26px/1.15 'Playfair Display', serif; background: var(--grad-accent); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.algo-info ul.notes { margin:12px 0 16px 18px; padding:0; }
+.algo-info ul.notes li { margin-bottom:6px; }
+.metrics-wrapper { margin-top:10px; }

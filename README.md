@@ -1,0 +1,159 @@
+## Algorithmic Visualizer
+
+An accessible, theme-driven React + Redux application for exploring and comparing sorting algorithms in real time. Recently redesigned with a liquid retina aesthetic, centralized event-driven animation system, pause/resume control, and live performance statistics.
+
+### Key Features
+
+- Unified event queue (pausable / resumable) for all algorithms
+- Rich set of algorithms: Bubble, Quick, Merge, Heap, Insertion, Selection, Shell, Counting, Bucket, Radix
+- Structured event taxonomy (compare, swap, pivot, gap, counting, bucket, digit phase, array updates, finalization)
+- Live stats: comparison and swap counters
+- Status bar & legend for instantaneous semantic context
+- Theming via CSS custom properties (easily extendable)
+- Accessible controls (ARIA-friendly, reduced motion friendly approach possible)
+
+### Getting Started
+
+Install dependencies and start the dev server:
+
+```bash
+npm install
+npm start
+```
+
+Visit http://localhost:3000.
+
+### Scripts
+
+```bash
+npm start      # dev server
+npm test       # jest tests
+npm run build  # production bundle
+```
+
+### Architecture Overview
+
+| Concern          | Approach                                                                          |
+| ---------------- | --------------------------------------------------------------------------------- |
+| State Management | Redux slices per algorithm highlight + core slices (array, stats, speed, paused)  |
+| Animation        | Single `DispatchQueue` consuming generated event lists                            |
+| Algorithms       | Pure functions returning `{ events, finalArray }` (no side effects)               |
+| Events           | Plain objects describing intent; playback interprets & dispatches reducers        |
+| Styling          | CSS custom properties + glass / depth effects                                     |
+| Accessibility    | Semantic buttons, status region (`role="status"`), planned reduced-motion toggles |
+
+### Event Types
+
+| Type             | Purpose                                                     | Typical Fields              |
+| ---------------- | ----------------------------------------------------------- | --------------------------- |
+| highlightCompare | Visual compare; increments comparisons                      | indices:[i,j]               |
+| performSwap      | Swap two elements; increments swaps                         | indices:[i,j], array:[...]? |
+| arrayUpdate      | Non-swap structural update (merge/shell/count/radix/bucket) | array:[...]                 |
+| finalizeElement  | Mark one index as sorted                                    | index                       |
+| finalizeAll      | Mark entire array sorted                                    | array:[...]                 |
+| setPivot         | Quick sort pivot highlight                                  | index                       |
+| gapUpdate        | Shell sort current gap                                      | gap                         |
+| countingTick     | Counting/radix digit frequency highlight                    | value                       |
+| bucketPhase      | Active bucket focus                                         | bucketIndex                 |
+| digitPhase       | Radix current exponent (10^k)                               | exp                         |
+
+### Adding a New Sorting Algorithm
+
+1. Create `src/algorithms/yourSort.js` exporting `function yourSort(array) { return { events, finalArray }; }`.
+2. Generate events instead of dispatching Redux actions directly.
+3. Add the function to `SORT_MAP` in `ToolbarContainer.js` & metadata (if you maintain an algorithm registry file).
+4. (Optional) Add new event type handling in the `playCentral` switch if needed.
+5. Update legend/status bar if the algorithm introduces new semantic states.
+
+Minimal template:
+
+```js
+export default function cocktailSort(input) {
+  const arr = input.slice();
+  const events = [];
+  let swapped = true,
+    start = 0,
+    end = arr.length - 1;
+  while (swapped) {
+    swapped = false;
+    for (let i = start; i < end; i++) {
+      events.push({ type: "highlightCompare", indices: [i, i + 1] });
+      if (arr[i] > arr[i + 1]) {
+        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+        events.push({
+          type: "performSwap",
+          indices: [i, i + 1],
+          array: arr.slice(),
+        });
+        swapped = true;
+      }
+    }
+    events.push({ type: "finalizeElement", index: end });
+    end--;
+    if (!swapped) break;
+    swapped = false;
+    for (let i = end; i > start; i--) {
+      events.push({ type: "highlightCompare", indices: [i - 1, i] });
+      if (arr[i - 1] > arr[i]) {
+        [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+        events.push({
+          type: "performSwap",
+          indices: [i - 1, i],
+          array: arr.slice(),
+        });
+        swapped = true;
+      }
+    }
+    events.push({ type: "finalizeElement", index: start });
+    start++;
+  }
+  for (let i = start; i <= end; i++)
+    events.push({ type: "finalizeElement", index: i });
+  events.push({ type: "finalizeAll", array: arr.slice() });
+  return { events, finalArray: arr };
+}
+```
+
+### Pause / Resume Mechanics
+
+`DispatchQueue` maintains a cursor over event runners. The global `paused` slice gates scheduling; toggling pause simply halts further timeouts without losing position.
+
+### Stats Semantics
+
+- Comparisons: Count only `highlightCompare` (value-to-value checks)
+- Swaps: Count only `performSwap` (logical position exchanges)
+  Non-comparison sorts (Counting, Radix, Bucket final placement) will often show low or zero swap counts—this is expected.
+
+### Theming
+
+Customize CSS variables (e.g. in `theme.css`) to reskin gradients, bar colors, depth effects. Legend chips reference semantic variables: `--compare-color`, `--swap-color`, etc.
+
+### Accessibility & Future Enhancements
+
+- Add reduced motion mode to skip animations by immediate array updates.
+- Provide keyboard focus outlines and roving tab index for algorithm selection.
+- Expose screen-reader friendly narration for major phase events (digitPhase, bucketPhase, gapUpdate).
+
+### Directory Highlights
+
+| Path                         | Purpose                                       |
+| ---------------------------- | --------------------------------------------- |
+| `src/algorithms/*`           | Pure event-generating sorting implementations |
+| `src/utils/dispatchQueue.js` | Central pausable queue                        |
+| `src/components/Status/`     | Status bar & legend UI                        |
+| `src/reducers/*`             | Redux slices                                  |
+
+### Contributing
+
+1. Fork & branch.
+2. Add / modify algorithm (follow event contract).
+3. Ensure no direct timeouts inside algorithms.
+4. Provide tests for new logic if complexity increases.
+
+### License
+
+MIT
+
+---
+
+Generated: Modernized from original CRA scaffold to an event-driven visualization platform.

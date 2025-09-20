@@ -1,0 +1,13 @@
+p {
+  font-size: 15px;
+  row-gap: 50px;
+}
+
+b {
+  font-weight: 650;
+}
+
+.ordered-list {
+  display: grid;
+  row-gap: 10px;
+}
