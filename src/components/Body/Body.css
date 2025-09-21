@@ -1,11 +1,11 @@
 #bodiesContainer0 {
   width: 100%;
-  height: 150%;
+  height: 100%;
   background-color: rgb(230, 230, 230);
   text-align: center;
-  transform: scale(0.75);
-  top: -150px;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -33,10 +33,9 @@
 }
 
 .visualizationWrapper {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  transform: scale(1.5, 1);
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
 }
 
 .arrayContainer {
@@ -63,11 +62,13 @@
 }
 
 #bodyContainer {
-  height: 100%;
-  width: 100%;
-  /* background-color: rgb(230, 230, 230); */
-  text-align: center;
+  height:calc(100% - 200px);
+  width:100%;
+  text-align:center;
+  overflow:hidden;
+  margin-top:0;
   transform: scale(0.85);
+  top: -150px;
 }
 
 .arrayElement {
@@ -90,4 +91,84 @@
 .mirrored-array-container p {
   font-size: 7px;
   color: black;
+}
+
+/* Bar styles for consolidated algorithm visualization */
+.bar {
+  display: inline-block;
+  margin: 0 var(--bar-gap, 2px);
+  width: var(--bar-width, 8px);
+  background-color: var(--color-bar-default, #4a90e2);
+  border-radius: 2px;
+  position: relative;
+  transition: all 0.2s ease;
+  vertical-align: bottom;
+}
+
+.bar span {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #333;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Algorithm-specific focus states */
+.bar.compare {
+  background-color: var(--color-compare, #ff6b6b);
+  transform: scale(1.1);
+}
+
+.bar.swap {
+  background-color: var(--color-swap, #4ecdc4);
+  animation: swap-pulse 0.3s ease-in-out;
+}
+
+.bar.sorted {
+  background-color: var(--color-sorted, #45b7d1);
+}
+
+.bar.pivot {
+  background-color: var(--color-pivot, #ffd93d);
+  border: 2px solid #333;
+}
+
+.bar.shell-focus {
+  background-color: var(--color-shell, #a8e6cf);
+  outline: 2px dashed #4caf50;
+}
+
+.bar.insertion-focus {
+  background-color: var(--color-insertion, #ffb3ba);
+  outline: 2px solid #e91e63;
+}
+
+.bar.selection-focus {
+  background-color: var(--color-selection, #bae1ff);
+  outline: 2px solid #2196f3;
+}
+
+.bar.bucket-focus {
+  background-color: var(--color-bucket, #d4b2d4);
+  outline: 2px solid #9c27b0;
+}
+
+.bar.counting-focus {
+  background-color: var(--color-counting, #c7ff8c);
+  outline: 2px solid #8bc34a;
+}
+
+@keyframes swap-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Responsive bar sizing */
+@media (max-width: 768px) {
+  .bar {
+    margin: 0 1px;
+  }
 }

@@ -23,11 +23,16 @@ code {
     monospace;
 } */
 
+body, #root { height:100vh; }
+.app-root-flex { display:flex; flex-direction:column; height:100%; }
+
+/* Use viewport height so resizing is immediately visible */
 .mainContainer {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: calc(100vh - 100px); /* adjust if Toolbar is 100px tall */
+  height:75vh; /* explicit: 75% of viewport height */
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  overflow:hidden; /* prevent children from expanding height */
 }
 
 .arrayContainer {
@@ -51,3 +56,5 @@ code {
 .arrayContainer.withInfo {
   margin-left: 0;
 }
+
+/* Removed previous upward shift to restore toolbar interactivity */

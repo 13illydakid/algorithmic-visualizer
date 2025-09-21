@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import "./ProgressBar.css";
 
+const DEBUG_DISABLE_PROGRESS = false; // toggle to false to re-enable
+
 function ProgressBar({ array, currentSorted, isRunning, progress }) {
+  // Hooks must run unconditionally
   const [pct, setPct] = useState(progress);
 
   useEffect(() => {
@@ -19,15 +22,14 @@ function ProgressBar({ array, currentSorted, isRunning, progress }) {
   useEffect(() => {
     if (!isRunning) return;
     const id = setInterval(() => {
-      setPct(
-        (prev) =>
-          progress ||
-          Math.min(100, Math.round((currentSorted.length / array.length) * 100))
-      );
-    }, 200);
+      const newPct = progress || Math.min(100, Math.round((currentSorted.length / array.length) * 100));
+      // Only update if progress changed by at least 1%
+      setPct(prev => Math.abs(prev - newPct) >= 1 ? newPct : prev);
+    }, 300); // Reduced frequency to 300ms for better performance
     return () => clearInterval(id);
   }, [isRunning, progress, currentSorted.length, array.length]);
 
+  if (DEBUG_DISABLE_PROGRESS) return null;
   if (!isRunning || !array.length) return null;
 
   return (

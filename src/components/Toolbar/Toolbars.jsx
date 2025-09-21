@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./Toolbar.css";
 
 class Toolbar extends Component {
@@ -21,7 +21,7 @@ class Toolbar extends Component {
     document.getElementById("changeSize").value = 50;
   }
 
-  handleClick(algorithm) {   
+  handleClick(algorithm) {
     // this.setState(prevState => {
     //   const { selectedAlgorithms } = prevState;
     //   if (selectedAlgorithms.includes(algorithm)) {
@@ -124,7 +124,7 @@ class Toolbar extends Component {
           onClick={() => this.handleClick("bubbleSort")}>
           Bubble Sort
         </div>
-        {/* <div
+        <div
           className={this.props.selectedAlgorithms.includes("selectionSort") ? "currentAlgorithmButton" : "algorithmButton"}
           onClick={() => this.handleClick("selectionSort")}>
           Selection Sort
@@ -153,7 +153,7 @@ class Toolbar extends Component {
           className={this.props.selectedAlgorithms.includes("shellSort") ? "currentAlgorithmButton" : "algorithmButton"}
           onClick={() => this.handleClick("shellSort")}>
           Shell Sort
-        </div> */}
+        </div>
         <div className="separator"></div>
         { this.props.selectedAlgorithms.length >= 1 ? <div
             id="sort"

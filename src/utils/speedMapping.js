@@ -8,7 +8,7 @@
 export const SPEED_LEVELS = [1, 3, 5, 8, 12, 15, 20];
 export const DEFAULT_SPEED = 5; // 5x default as requested
 
-const BASE_DELAY = 220; // ms at 1x
+const BASE_DELAY = 140; // ms at 1x (reduced for faster playback)
 
 export function computeDelay(multiplier) {
   // Inverse relationship: higher multiplier -> lower delay.
@@ -19,5 +19,5 @@ export function computeDelay(multiplier) {
   // Simple inverse: BASE_DELAY / (clamped / 1)
   // Ensure a minimum floor so extremely high multipliers still render.
   const raw = BASE_DELAY / clamped;
-  return Math.max(10, Math.round(raw));
+  return Math.max(4, Math.round(raw));
 }

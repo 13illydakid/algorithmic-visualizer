@@ -48,13 +48,27 @@
   background: #9bc5ef;
 }
 
+/* #infoContainer {
+  position: fixed;
+  top: var(--toolbar-height);
+  left: var(--sidebar-width);
+  width: var(--info-width);
+  height: calc(100vh - var(--toolbar-height));
+  padding:28px 26px 60px;
+  overflow-y:auto;
+  background: var(--clr-surface);
+  border-right:1px solid var(--clr-border);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+} */
+
 #infoContainer {
   position: fixed;
   top: 100px; /* same toolbar height */
   left: 0;
   width: calc(28vw + 20px);
   height: calc(100vh - 170px);
-  background: rgba(236, 240, 241, 0.92);
+  background: var(--clr-surface);
   padding: 20px 28px 24px;
   border-left: 3px solid #e67e22;
   box-shadow: none;

@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import "./Toolbar.css";
+import { Component } from "react";
 import SpeedControl from "./SpeedControl.jsx";
+import "./Toolbar.css";
+import TurboControl from "./TurboControl.jsx";
 
 class Toolbar extends Component {
   constructor(props) {
@@ -203,8 +204,10 @@ class Toolbar extends Component {
             <SpeedControl
               value={speed}
               onChange={(val) => setSpeed(val)}
-              disabled={isRunning}
+              // Allow adjustment during run for dynamic speed changes
+              disabled={false}
             />
+            <TurboControl />
           </div>
         </div>
       </header>

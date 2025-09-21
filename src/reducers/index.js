@@ -1,23 +1,27 @@
 import { combineReducers } from "redux";
-import { array } from "./array";
 import { algorithm } from "./algorithm";
+import { array } from "./array";
 import { currentBubbleTwo } from "./bubbleSort";
-import { currentQuickTwo, pivot } from "./quickSort";
-import { currentSwappers } from "./swappers";
-import { currentHeapThree } from "./heapSort";
-import { currentSorted } from "./sorted";
-import { currentMergeX } from "./mergeSort";
-import { isRunning } from "./running";
-import { selectedAlgorithms } from "./selectedAlgorithms";
-import { selectionSort, selectionSortPivot } from "./selectionSort";
-import { insertionSortReducer } from "./insertionSort";
-import { currentBucket, bucketAssignments } from "./bucketSort";
+import { bucketAssignments, currentBucket } from "./bucketSort";
 import { currentCountIndex, currentOutputIndex } from "./countingSort";
-import { shellGap, shellIndices } from "./shellSort";
-import { speed } from "./speed";
+import { currentHeapThree } from "./heapSort";
+import { insertionSortReducer } from "./insertionSort";
+import { currentMergeX } from "./mergeSort";
 import { paused } from "./paused";
-import { stats } from "./stats";
 import { progress } from "./progress";
+import { currentQuickTwo, pivot } from "./quickSort";
+import { isRunning } from "./running";
+import { selectedAlgorithms } from "./running/selectedAlgorithms";
+import { selectionSort, selectionSortPivot } from "./selectionSort";
+import { shellGap, shellIndices } from "./shellSort";
+import { currentSorted } from "./sorted";
+import { speed } from "./speed";
+import { stats } from "./stats";
+import { currentSwappers } from "./swappers";
+// New reducers
+import { eta } from "./eta";
+import { perf } from "./perf";
+import { turbo } from "./turbo";
 
 const rootReducer = combineReducers({
   array,
@@ -44,6 +48,9 @@ const rootReducer = combineReducers({
   paused,
   stats,
   progress,
+  eta,
+  perf,
+  turbo,
 });
 
 export default rootReducer;

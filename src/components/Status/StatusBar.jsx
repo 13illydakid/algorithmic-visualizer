@@ -1,7 +1,6 @@
-import React from "react";
 import { connect } from "react-redux";
-import "./StatusBar.css";
 import { computeDelay } from "../../utils/speedMapping";
+import "./StatusBar.css";
 
 function StatusBar(props) {
   const {
@@ -13,6 +12,8 @@ function StatusBar(props) {
     currentBucket,
     currentCountIndex,
     paused,
+    eta,
+    perf,
   } = props;
   const delay = computeDelay(speed);
   return (
@@ -35,6 +36,18 @@ function StatusBar(props) {
         <span className="label">Swaps:</span>
         <span className="value">{stats.swaps}</span>
       </div>
+      {eta != null && (
+        <div className="status-section">
+          <span className="label">ETA(s):</span>
+          <span className="value">{eta.toFixed(1)}</span>
+        </div>
+      )}
+      {perf && perf.eps > 0 && (
+        <div className="status-section">
+          <span className="label">EPS:</span>
+          <span className="value">{perf.eps}</span>
+        </div>
+      )}
       {pivot !== undefined && pivot !== null && (
         <div className="status-section">
           <span className="label">Pivot:</span>
@@ -76,6 +89,8 @@ const mapState = (state) => ({
   currentBucket: state.currentBucket,
   currentCountIndex: state.currentCountIndex,
   paused: state.paused,
+  eta: state.eta,
+  perf: state.perf,
 });
 
 export default connect(mapState)(StatusBar);

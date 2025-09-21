@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { SPEED_LEVELS, DEFAULT_SPEED } from "../../utils/speedMapping";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DEFAULT_SPEED, SPEED_LEVELS } from "../../utils/speedMapping";
 import "./SpeedControl.css";
 
 /* Contract
@@ -58,62 +58,51 @@ export default function SpeedControl({ value, onChange, disabled }) {
   }, [focused]);
 
   const gaugeAngleForIndex = (idx) => {
-    // Map index 0 -> -90deg, last -> 90deg (semi-circle range 180deg)
-    const min = -90;
-    const max = 90;
+    // Original range -90 to 90. Apply global rotation offset of -100 degrees (counterclockwise).
+    const baseMin = -90;
+    const baseMax = 90;
     const fraction = idx / (SPEED_LEVELS.length - 1);
-    return min + fraction * (max - min);
+    const raw = baseMin + fraction * (baseMax - baseMin);
+    return raw - 100; // rotate counterclockwise
   };
 
   const angle = gaugeAngleForIndex(currentIndex);
 
   return (
     <div
-      className={`speed-control ${focused ? "is-focused" : ""} ${
-        disabled ? "is-disabled" : ""
-      }`}
+      className={`speed-control ${focused ? 'is-focused' : ''} ${disabled ? 'is-disabled' : ''}`}
       ref={containerRef}
       tabIndex={0}
       aria-label="Speed control"
       onFocus={() => setFocused(true)}
       onClick={() => setFocused(true)}
-      role="slider"
-      aria-valuemin={SPEED_LEVELS[0]}
-      aria-valuemax={SPEED_LEVELS[SPEED_LEVELS.length - 1]}
-      aria-valuenow={value}
-      aria-valuetext={`${value}x`}
+      role="group"
       aria-disabled={disabled}
     >
-      <div className="sc-vertical">
-        {SPEED_LEVELS.slice()
-          .reverse()
-          .map((lvl) => {
-            const idx = SPEED_LEVELS.indexOf(lvl);
-            return (
-              <button
-                type="button"
-                key={lvl}
-                className={`sc-mark ${lvl === value ? "active" : ""}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setByIndex(idx);
-                  setFocused(true);
-                }}
-                disabled={disabled}
-                aria-label={`Set speed to ${lvl}x`}
-              >
-                <span className="sc-label">{lvl}x</span>
-                <span className="sc-dot" />
-              </button>
-            );
-          })}
-      </div>
-      <div className="sc-gauge" aria-hidden="true">
-        <div className="sc-gauge-arc" />
-        <div
-          className="sc-gauge-hand"
-          style={{ transform: `rotate(${angle}deg)` }}
-        />
+      <div className="sc-radial" aria-hidden="true">
+        <div className="sc-radial-arc" />
+        <div className="sc-radial-hand" style={{ transform: `rotate(${angle}deg)` }} />
+        {/* marks positioned absolutely along arc */}
+        {SPEED_LEVELS.map((lvl, idx) => {
+          const theta = gaugeAngleForIndex(idx) * (Math.PI/180);
+          const radius = 70;
+          const x = 70 + radius * Math.cos(theta);
+          const y = 70 + radius * Math.sin(theta);
+          const active = lvl === value;
+          return (
+            <button
+              key={lvl}
+              type="button"
+              className={`sc-mark-h ${active ? 'active' : ''}`}
+              style={{ left: x, top: y }}
+              onClick={(e) => { e.stopPropagation(); setByIndex(idx); setFocused(true); }}
+              aria-label={`Set speed to ${lvl}x`}
+            >
+              <span className="sc-dot-h" />
+              <span className="sc-label-h">{lvl}x</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
