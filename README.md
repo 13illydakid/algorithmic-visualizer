@@ -5,6 +5,27 @@ An accessible, theme-driven React + Redux application for exploring and comparin
 ### Key Features
 
 - Unified event queue (pausable / resumable) for all algorithms
+- Centralized sort runner to prevent duplicated playback logic (improves consistency & performance)
+- Adaptive batching of finalize events to avoid late-stage slowdowns
+- Turbo mode for thinning compare events on very large sequences
+### Recent Performance Fix (Sept 2025)
+
+An issue where playback began fast then degraded over time (sometimes never finishing) was resolved by:
+
+1. Removing a duplicated inline event loop in `SidebarContainer` that competed with the main queue.
+2. Consolidating all sorting playback logic into `src/utils/sortRunner.js` to ensure a single DispatchQueue drives state changes.
+3. Eliminating per-frame `console.log` calls in the array rendering path.
+4. Adding array identity checks to skip redundant `SET_ARRAY` dispatches when the data is unchanged.
+5. Improving finalize batching logic to reduce Redux churn in later phases of a sort.
+
+Run a production build to benchmark:
+
+```
+npm run build
+```
+
+Then serve `src/public` (or the build output depending on your deployment setup) with any static server.
+
 - Rich set of algorithms: Bubble, Quick, Merge, Heap, Insertion, Selection, Shell, Counting, Bucket, Radix
 - Structured event taxonomy (compare, swap, pivot, gap, counting, bucket, digit phase, array updates, finalization)
 - Live stats: comparison and swap counters

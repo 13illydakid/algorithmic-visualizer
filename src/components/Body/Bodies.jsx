@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./Body.css";
 
 class Body extends Component {
@@ -14,25 +14,20 @@ class Body extends Component {
       currentMergeX,
     } = props;
 
-    let highlightIndexes = [];
-    let label = "";
+  let highlightIndexes = [];
 
     switch (algorithm) {
       case "bubbleSort":
         highlightIndexes = currentBubbleTwo;
-        label = "Bubble Sort";
         break;
       case "quickSort":
         highlightIndexes = currentQuickTwo;
-        label = "Quick Sort";
         break;
       case "heapSort":
         highlightIndexes = currentHeapThree;
-        label = "Heap Sort";
         break;
       case "mergeSort":
         highlightIndexes = currentMergeX;
-        label = "Merge Sort";
         break;
       default:
         break;
@@ -164,7 +159,6 @@ class Body extends Component {
           {/* <div class="arrayElement" style="height: 303px; width: 7px; background-color: rgba(66, 134, 244, 0.8); color: transparent;">101</div> */}
           {this.props.array.length
             ? this.props.array.map((number, index) => {
-                console.log(this.props);
                 const backgroundColor = this.props.currentSwappers.includes(
                   index
                 )
