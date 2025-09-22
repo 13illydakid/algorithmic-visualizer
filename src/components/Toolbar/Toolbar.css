@@ -53,6 +53,7 @@
 .refresh-btn { position:relative; display:inline-flex; align-items:center; gap:10px; padding:10px 18px 10px 14px; border-radius: var(--radius-pill); background: var(--clr-surface); border:1px solid var(--clr-border); color:var(--clr-text); font:500 13px/1 'Inter'; cursor:pointer; overflow:hidden; transition: background var(--dur-med) var(--ease-emph), border-color var(--dur-med) var(--ease-emph), transform var(--dur-fast) var(--ease-emph); }
 .refresh-btn:disabled { opacity:.5; cursor:not-allowed; }
 .refresh-btn:hover { background: var(--clr-surface-alt); border-color: var(--clr-accent-1); }
+.refresh-btn:active svg { animation: spinRefresh .7s linear; }
 .refresh-btn:focus-visible { outline:none; box-shadow: var(--ring-focus); }
 .refresh-btn svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
 .refresh-label { font-weight:600; background: var(--grad-accent); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:.5px; }
@@ -80,6 +81,15 @@
 .metric-chip:before { content:""; position:absolute; top:0; right:0; bottom:0; left:0; background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.18),transparent 65%); opacity:.45; mix-blend-mode:overlay; }
 .m-val { font:600 14px/1 'Inter'; letter-spacing:.5px; color:var(--clr-text); z-index:1; }
 .m-label { font:500 10px/1.1 'Inter'; text-transform:uppercase; letter-spacing:1px; opacity:.65; margin-top:2px; z-index:1; }
+/* Value change animation */
+.metric-chip.is-changed .m-val { animation: metricPulse .9s var(--ease-emph); }
+@keyframes metricPulse { 0%{filter:brightness(2); transform:translateY(-2px) scale(1.05);} 60%{filter:brightness(1); transform:translateY(0) scale(1);} 100%{filter:brightness(1);} }
+@media (prefers-reduced-motion: reduce) { .metric-chip.is-changed .m-val { animation:none; } }
+
+/* Reduced motion disables spin */
+@media (prefers-reduced-motion: reduce) { .refresh-btn:active svg { animation:none; } }
+
+@keyframes spinRefresh { to { transform: rotate(360deg); } }
 
 /* Small action buttons inside center cluster */
 .small-action { padding:8px 14px; font-size:12px; }

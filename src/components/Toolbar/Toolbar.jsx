@@ -2,6 +2,7 @@ import { Component } from "react";
 import ArraySizeControl from "./ArraySizeControl.jsx";
 import MetricChips from "./MetricChips.jsx";
 import SpeedControl from "./SpeedControl.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
 import "./Toolbar.css";
 import TurboControl from "./TurboControl.jsx";
 
@@ -132,6 +133,7 @@ class Toolbar extends Component {
           <div className="toolbar-right new-right-cluster">
             <SpeedControl value={speed} onChange={(val) => setSpeed(val)} disabled={false} />
             <TurboControl />
+            <ThemeToggle />
           </div>
         </div>
       </header>

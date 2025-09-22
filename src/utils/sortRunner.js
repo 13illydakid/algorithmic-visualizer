@@ -23,7 +23,7 @@ import { setCurrentMergeX } from "../reducers/mergeSort";
 import { updatePerf } from "../reducers/perf";
 import { setCurrentQuickTwo, setPivot } from "../reducers/quickSort";
 import { setRunning } from "../reducers/running";
-import { selectionSortPivot, selectionSort as selectionSortState } from "../reducers/selectionSort";
+import { setCurrentSelection, setSelectionPivot } from "../reducers/selectionSort";
 import { setShellGap, setShellIndices } from "../reducers/shellSort";
 import { setCurrentSorted } from "../reducers/sorted";
 import { incComparisons, incSwaps } from "../reducers/stats";
@@ -118,7 +118,7 @@ function playCentral(events, dispatch, getState, baseDelay, algorithm, turboCfg)
         else if (algorithm === 'mergeSort') dispatch(setCurrentMergeX(e.indices));
         else if (algorithm === 'heapSort') dispatch(setCurrentHeapThree(e.indices));
         else if (algorithm === 'insertionSort') dispatch(setCurrentInsertion(e.indices));
-        else if (algorithm === 'selectionSort') { const [m, j] = e.indices; dispatch(selectionSortPivot(m)); dispatch(selectionSortState([m, j])); }
+        else if (algorithm === 'selectionSort') { const [m, j] = e.indices; dispatch(setSelectionPivot(m)); dispatch(setCurrentSelection([m, j])); }
         else if (algorithm === 'shellSort') dispatch(setShellIndices(e.indices));
         dispatch(incComparisons());
         break;

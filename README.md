@@ -2,6 +2,20 @@
 
 An accessible, theme-driven React + Redux application for exploring and comparing sorting algorithms in real time. Recently redesigned with a liquid retina aesthetic, centralized event-driven animation system, pause/resume control, and live performance statistics.
 
+### Toolbar Redesign (Sept 2025)
+
+The control surface has been refactored for density + clarity:
+
+- Semi‑circle speed gauge (baseline aligned) mapping 1x → 20x linearly across 180°.
+- Array Size pill control (compact +/- buttons + track fill) minimizing vertical footprint.
+- Animated metric chips (comparisons, swaps, EPS, ETA, progress) with subtle pulse on change.
+- Turbo toggle & pause/resume co-located for quicker interaction.
+- Theme toggle (dark / light) powered by CSS custom property layers; smooth transitions.
+- Reduced-motion support auto-respects `prefers-reduced-motion` (suppresses pulses & spins).
+- Accessibility: live status chips (`aria-live=polite`), descriptive buttons, high-contrast focus ring.
+
+All styling leverages a small set of semantic variables in `theme.css` to enable rapid future theme variants.
+
 ### Key Features
 
 - Unified event queue (pausable / resumable) for all algorithms
@@ -154,6 +168,8 @@ Customize CSS variables (e.g. in `theme.css`) to reskin gradients, bar colors, d
 - Add reduced motion mode to skip animations by immediate array updates.
 - Provide keyboard focus outlines and roving tab index for algorithm selection.
 - Expose screen-reader friendly narration for major phase events (digitPhase, bucketPhase, gapUpdate).
+- Add granular user setting for comparison thinning thresholds in Turbo mode.
+- Persist user theme & speed preferences (currently theme persisted via localStorage).
 
 ### Directory Highlights
 

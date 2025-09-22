@@ -42,6 +42,25 @@
   --info-width: 340px;
 }
 
+/* Light theme variant */
+:root.light-theme {
+  --clr-bg: radial-gradient(circle at 20% 20%, #f5f7fb 0%, #eef1f6 40%, #e6eaf0 100%);
+  --clr-surface: rgba(255,255,255,0.65);
+  --clr-surface-alt: rgba(255,255,255,0.9);
+  --clr-border: rgba(0,0,0,0.15);
+  --clr-border-strong: rgba(0,0,0,0.35);
+  --clr-text: #1c222b;
+  --clr-text-dim: #4f5a6a;
+  --clr-accent-1: #4b5dff;
+  --clr-accent-2: #ff4fa3;
+  --clr-accent-3: #1bbf8d;
+  --grad-accent: linear-gradient(135deg,#4b5dff,#ff4fa3 55%,#1bbf8d);
+  --grad-bar: linear-gradient(180deg,#4b5dff,#ff4fa3);
+  --grad-bar-sorted: linear-gradient(180deg,#1bbf8d,#118565);
+}
+
+html, body { transition: background .6s var(--ease-emph), color .6s var(--ease-emph); }
+
 html, body, #root {
   height: 100%;
 }

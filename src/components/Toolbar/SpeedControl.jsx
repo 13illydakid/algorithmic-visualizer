@@ -13,100 +13,70 @@ export default function SpeedControl({ value, onChange, disabled }) {
   // Ensure valid value
   const currentIndex = Math.max(0, SPEED_LEVELS.indexOf(value));
 
-  const setByIndex = useCallback(
-    (idx) => {
-      if (idx < 0 || idx >= SPEED_LEVELS.length) return;
-      onChange && onChange(SPEED_LEVELS[idx]);
-    },
-    [onChange]
-  );
+  const setByIndex = useCallback((idx) => {
+    if (idx < 0 || idx >= SPEED_LEVELS.length) return;
+    onChange && onChange(SPEED_LEVELS[idx]);
+  }, [onChange]);
 
-  const handleKey = useCallback(
-    (e) => {
-      if (!focused) return;
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setByIndex(currentIndex + 1);
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setByIndex(currentIndex - 1);
-      } else if (e.key === "Escape") {
-        setFocused(false);
-        containerRef.current && containerRef.current.blur();
-      }
-    },
-    [focused, currentIndex, setByIndex]
-  );
+  const handleKey = useCallback((e) => {
+    if (!focused) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setByIndex(currentIndex + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setByIndex(currentIndex - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); setByIndex(0); }
+    else if (e.key === 'End') { e.preventDefault(); setByIndex(SPEED_LEVELS.length - 1); }
+    else if (e.key === 'Escape') { setFocused(false); containerRef.current && containerRef.current.blur(); }
+  }, [focused, currentIndex, setByIndex]);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [handleKey]);
+  useEffect(() => { window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey); }, [handleKey]);
+  useEffect(() => { const outside = (e) => { if (focused && containerRef.current && !containerRef.current.contains(e.target)) setFocused(false); }; window.addEventListener('mousedown', outside); return () => window.removeEventListener('mousedown', outside); }, [focused]);
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (
-        focused &&
-        containerRef.current &&
-        !containerRef.current.contains(e.target)
-      ) {
-        setFocused(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => window.removeEventListener("mousedown", handleClickOutside);
-  }, [focused]);
+  // Semi-circle geometry (0deg at left baseline, 180deg at right baseline)
+  const angleRadForIndex = (idx) => (idx / (SPEED_LEVELS.length - 1)) * Math.PI; // 0..π
+  const needleAngleDeg = (currentIndex / (SPEED_LEVELS.length - 1)) * 180; // for rotation convenience
 
-  const gaugeAngleForIndex = (idx) => {
-    // Original range -90 to 90. Apply global rotation offset of -100 degrees (counterclockwise).
-    const baseMin = -90;
-    const baseMax = 90;
-    const fraction = idx / (SPEED_LEVELS.length - 1);
-    const raw = baseMin + fraction * (baseMax - baseMin);
-    return raw - 100; // rotate counterclockwise
-  };
-
-  const angle = gaugeAngleForIndex(currentIndex);
+  const radius = 60; // visual radius
+  const cx = radius; // center x
+  const cy = radius; // center y (baseline at cy)
+  const needleLen = radius - 8;
+  const needleAngleRad = angleRadForIndex(currentIndex);
+  const needleX = cx - needleLen * Math.cos(needleAngleRad);
+  const needleY = cy - needleLen * Math.sin(needleAngleRad);
 
   return (
     <div
-      className={`speed-control ${focused ? 'is-focused' : ''} ${disabled ? 'is-disabled' : ''}`}
+      className={`speed-control semi ${focused ? 'is-focused' : ''} ${disabled ? 'is-disabled' : ''}`}
       ref={containerRef}
       tabIndex={0}
-      aria-label="Speed control"
+      role="group"
+      aria-label="Speed control semi-circle"
+      aria-disabled={disabled}
       onFocus={() => setFocused(true)}
       onClick={() => setFocused(true)}
-      role="group"
-      aria-disabled={disabled}
     >
-      <div className="sc-radial" aria-hidden="true">
-        <div className="sc-radial-arc" />
-        <div className="sc-radial-hand" style={{ transform: `rotate(${angle}deg)` }} />
-        {/* marks positioned absolutely along arc */}
+      <svg className="sc-semi" viewBox={`0 0 ${radius*2} ${radius}`} width={radius*2} height={radius} aria-hidden="true">
+        <path className="sc-arc" d={describeArc(cx, cy, radius-4, 180, 0)} />
+        {/* Ticks */}
         {SPEED_LEVELS.map((lvl, idx) => {
-          const theta = gaugeAngleForIndex(idx) * (Math.PI/180);
-          const radius = 70;
-          const x = 70 + radius * Math.cos(theta);
-          const y = 70 + radius * Math.sin(theta);
+          const a = angleRadForIndex(idx);
+          const x = cx - (radius-6) * Math.cos(a);
+          const y = cy - (radius-6) * Math.sin(a);
           const active = lvl === value;
           return (
-            <button
-              key={lvl}
-              type="button"
-              className={`sc-mark-h ${active ? 'active' : ''}`}
-              style={{ left: x, top: y }}
-              onClick={(e) => { e.stopPropagation(); setByIndex(idx); setFocused(true); }}
-              aria-label={`Set speed to ${lvl}x`}
-            >
-              <span className="sc-dot-h" />
-              <span className="sc-label-h">{lvl}x</span>
-            </button>
+            <g key={lvl} className={`sc-tick ${active ? 'active' : ''}`} transform={`translate(${x} ${y})`}>
+              <circle r={7} className="sc-tick-dot" onClick={(e)=>{ e.stopPropagation(); setByIndex(idx); setFocused(true); }} />
+              <text className="sc-tick-label" y={-12}>{lvl}x</text>
+            </g>
           );
         })}
-      </div>
+        <line className="sc-needle" x1={cx} y1={cy} x2={needleX} y2={needleY} data-angle={needleAngleDeg} />
+      </svg>
     </div>
   );
 }
+
+// SVG arc helper (large-arc-flag based on angles)
+function polarToCartesian(cx, cy, r, angleDeg){ const rad=(angleDeg*Math.PI)/180; return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) }; }
+function describeArc(cx, cy, r, startAngle, endAngle){ const start=polarToCartesian(cx,cy,r,endAngle); const end=polarToCartesian(cx,cy,r,startAngle); const large = endAngle - startAngle <= 180 ? 0 : 1; return `M ${start.x} ${start.y} A ${r} ${r} 0 ${large} 0 ${end.x} ${end.y}`; }
 
 SpeedControl.defaultProps = {
   value: DEFAULT_SPEED,

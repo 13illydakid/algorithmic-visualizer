@@ -1,26 +1,19 @@
-.speed-control { position:relative; width:160px; height:140px; outline:none; display:flex; align-items:center; justify-content:center; }
-.speed-control.is-focused { box-shadow:0 0 0 3px rgba(0,150,255,.35); border-radius:12px; }
+/* New semi-circle speed control flush with toolbar bottom */
+.speed-control.semi { position:relative; width:140px; height:72px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:0; }
+.speed-control.semi:after { content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background: var(--clr-border); }
+.speed-control.is-focused { outline:none; }
 .speed-control.is-disabled { opacity:.5; pointer-events:none; }
 
-/* Radial container (semi-circle) */
-.sc-radial { position:relative; width:140px; height:140px; }
-.sc-radial-arc { position:absolute; left:50%; top:50%; width:130px; height:130px; margin:-65px 0 0 -65px; border-radius:50%; border:2px solid rgba(255,255,255,0.08); background:radial-gradient(circle at 50% 60%,rgba(255,255,255,0.08),transparent 70%); -webkit-mask:radial-gradient(circle at 50% 60%,#000 62%,transparent 63%); mask:radial-gradient(circle at 50% 60%,#000 62%,transparent 63%); }
-.sc-radial-hand { position:absolute; left:50%; top:50%; width:4px; height:60px; background:linear-gradient(var(--clr-accent-1,#4ea7ff),#1d2734); transform-origin:50% 90%; border-radius:2px; box-shadow:0 0 4px -1px var(--clr-accent-1,#4ea7ff); transition:transform .25s cubic-bezier(.4,.2,.2,1); }
+.sc-semi { display:block; overflow:visible; }
+.sc-arc { fill:none; stroke: var(--clr-border); stroke-width:2; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+.sc-needle { stroke: var(--clr-accent-1); stroke-width:4; stroke-linecap:round; filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); transition: transform .35s var(--ease-emph); transform-origin: center bottom; }
+.speed-control.semi .sc-needle { transition: transform var(--dur-med) var(--ease-emph); }
 
-/* Arc marks */
-.sc-mark-h { position:absolute; transform:translate(-50%,-50%); background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; font:500 10px/1 'Inter', system-ui; color:var(--clr-text,#d6dbe0); padding:0; }
-.sc-mark-h .sc-dot-h { width:10px; height:10px; border:2px solid var(--clr-accent-1,#4ea7ff); border-radius:50%; background:#0f141a; transition:.25s; box-shadow:0 0 0 1px rgba(255,255,255,0.15); }
-.sc-mark-h.active .sc-dot-h { background:var(--clr-accent-1,#4ea7ff); transform:scale(1.15); }
-.sc-mark-h .sc-label-h { transform:translateY(2px); font-weight:500; letter-spacing:.5px; }
-.sc-mark-h.active .sc-label-h { font-weight:600; color:var(--clr-accent-1,#4ea7ff); }
+.sc-tick-dot { fill: #0f141a; stroke: var(--clr-accent-1); stroke-width:2; cursor:pointer; transition: fill var(--dur-med) var(--ease-emph), transform var(--dur-med) var(--ease-emph); }
+.sc-tick.active .sc-tick-dot { fill: var(--clr-accent-1); transform: scale(1.25); }
+.sc-tick-label { font: 600 9px/1 'Inter'; text-anchor: middle; fill: var(--clr-text-dim); pointer-events:none; }
+.sc-tick.active .sc-tick-label { fill: var(--clr-accent-1); }
 
-@media (max-width:640px) { .speed-control { width:130px; } .sc-mark-h .sc-label-h { font-size:9px; } }
-.sc-mark:focus-visible { outline:none; text-decoration:underline; }
-.sc-mark:hover .sc-dot { background:var(--clr-accent-1,#4ea7ff); }
+@media (max-width: 640px) { .speed-control.semi { width:120px; height:60px; } .sc-tick-label { font-size:8px; } }
 
-/* Gauge */
-.sc-gauge { width:140px; height:70px; position:relative; }
-.sc-gauge-arc { position:absolute; inset:0; border:6px solid var(--clr-surface-alt,#d9d9d9); border-bottom:none; border-top-left-radius:140px; border-top-right-radius:140px; }
-.sc-gauge-hand { position:absolute; left:50%; bottom:0; width:4px; height:78px; background:linear-gradient(var(--clr-accent-1,#4ea7ff), var(--clr-accent-2,#ff4081)); transform-origin:50% 100%; border-radius:2px; box-shadow:0 0 8px -2px rgba(0,0,0,.4); transition:transform .35s cubic-bezier(.4,.8,.3,1.2); }
-
-@media (prefers-reduced-motion: reduce) { .sc-gauge-hand { transition:none; } }
+@media (prefers-reduced-motion: reduce) { .sc-needle { transition:none; } .sc-tick-dot { transition:none; } }
