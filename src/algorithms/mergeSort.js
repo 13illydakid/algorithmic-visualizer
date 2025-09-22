@@ -17,7 +17,8 @@ function mergeSort(stateArray) {
 }
 
 function mergeSortRecursive(array, events, start, end, ctx, totalLength) {
-  if (array.length === 1) return array;
+  // Base cases: empty or single element subarray
+  if (array.length <= 1 || start > end) return array;
   const half = Math.floor(array.length / 2);
   const first = array.slice(0, half);
   const second = array.slice(half);

@@ -11,22 +11,18 @@ import Toolbar from "./Toolbar.jsx";
 
 // speed reducer imported in root; value accessed via mapStateToProps
 
-const mapStateToProps = ({
-  array,
-  algorithm,
-  isRunning,
-  selectedAlgorithms,
-  speed,
-  paused,
-  turbo,
-}) => ({
-  array,
-  algorithm,
-  isRunning,
-  selectedAlgorithms,
-  speed,
-  paused,
-  turbo,
+const mapStateToProps = (state) => ({
+  array: state.array,
+  algorithm: state.algorithm,
+  isRunning: state.isRunning,
+  selectedAlgorithms: state.selectedAlgorithms,
+  speed: state.speed,
+  paused: state.paused,
+  turbo: state.turbo,
+  stats: state.stats,
+  perf: state.perf,
+  eta: state.eta,
+  progress: state.progress,
 });
 
 const mapDispatchToProps = (dispatch) => ({
