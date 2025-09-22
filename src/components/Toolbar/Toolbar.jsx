@@ -5,6 +5,7 @@ import SpeedControl from "./SpeedControl.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 import "./Toolbar.css";
 import TurboControl from "./TurboControl.jsx";
+import logo from "../../assets/favicon.png";
 
 class Toolbar extends Component {
   constructor(props) {
@@ -73,12 +74,16 @@ class Toolbar extends Component {
               aria-label="Generate new array"
             >
               <span className="refresh-glow" />
-              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              {/* <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 12a9 9 0 0 1 15.36-6.36" />
                 <polyline points="21 3 18 6 15 3" />
                 <path d="M21 12a9 9 0 0 1-15.36 6.36" />
                 <polyline points="3 21 6 18 9 21" />
-              </svg>
+              </svg> */}
+              <div className="logo">
+                <img src={logo} alt="Logo" />
+              </div>
+              
               <span className="refresh-label">New Array</span>
             </button>
             <ArraySizeControl

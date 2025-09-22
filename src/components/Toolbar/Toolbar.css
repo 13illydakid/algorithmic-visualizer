@@ -99,6 +99,24 @@
 @media (max-width: 900px) { .metric-chips { display:none; } .new-center-cluster { gap:14px; } }
 @media (max-width: 640px) { .asc-track { display:none; } .asc-meta { display:none; } .asc-root { gap:8px; } }
 
+/* Logo Styling / Breathing */
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.85;
+  }
+}
+
+.logo img {
+  width: 50px;
+  animation: breathe 3s ease-in-out infinite;
+}
+
 /* Slider Styling */
 .slider-outer {
   display: block;
