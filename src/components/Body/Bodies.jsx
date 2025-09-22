@@ -69,7 +69,8 @@ class Body extends Component {
         ? 10
         : 8;
     const fontSize = `${numFont}px`;
-    const color = numWidth > 20 ? "white" : "transparent";
+  // Always show numbers; fade when very narrow
+  const color = `rgba(255,255,255,${Math.min(1, Math.max(0.15, numWidth / 24))})`;
 
     return (
       <div className="visualizationWrapper" key={key}>
@@ -134,7 +135,7 @@ class Body extends Component {
         ? 2.5
         : 2;
     const margin = `${numMargin}px`;
-    const color = numWidth > 20 ? "white" : "transparent";
+  const color = `rgba(255,255,255,${Math.min(1, Math.max(0.15, numWidth / 24))})`;
     const numFont =
       numWidth > 70
         ? 20

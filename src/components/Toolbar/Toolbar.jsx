@@ -20,14 +20,8 @@ class Toolbar extends Component {
   }
 
   componentDidMount() {
-    const { generateArray } = this.props;
-    generateArray(87);
-
-    const input = document.getElementById("changeSize");
-    if (input) {
-      input.style.background = `linear-gradient( to right, rgba(0, 0, 255, 0.75), rgba(255, 255, 0, 0.15) )`;
-      input.value = 50;
-    }
+    // Initialize array size from current rangeValue
+    this.applyArraySize(this.state.rangeValue);
   }
 
   handleClick(algorithm) {
@@ -36,31 +30,19 @@ class Toolbar extends Component {
   }
 
   handleChange(evt) {
-    const { generateArray } = this.props;
     const newValue = parseInt(evt.target.value, 10);
-    const { initialRangeValue } = this.state;
+    this.applyArraySize(newValue);
+  }
 
-    let blueOpacity = 0.75,
-      yellowOpacity = 0.15;
-
-    if (newValue > initialRangeValue) {
-      const difference = newValue - initialRangeValue;
-      yellowOpacity =
-        0.15 + (difference / (100 - initialRangeValue)) * (1 - 0.15);
-      if (yellowOpacity > 1) yellowOpacity = 1;
-    } else {
-      const difference = initialRangeValue - newValue;
-      blueOpacity = 0.75 - (difference / initialRangeValue) * 0.75;
-      if (blueOpacity < 0) blueOpacity = 0;
-    }
-
-    const input = document.getElementById("changeSize");
-    if (input) {
-      input.style.background = `linear-gradient( to right, rgba(0, 0, 255, ${blueOpacity}), rgba(255, 255, 0, ${yellowOpacity}) )`;
-    }
-
-    this.setState({ rangeValue: evt.target.value });
-    generateArray(Math.floor((newValue + 3) * 1.65));
+  applyArraySize(controlValue) {
+    const { generateArray } = this.props;
+    // Map control 0..100 to a length curve. Use quadratic easing for more resolution in smaller sizes.
+    const t = Math.min(100, Math.max(0, controlValue)) / 100; // 0..1
+    const maxLen = 240; // upper bound
+    const eased = t * t; // quadratic ease
+    const length = Math.max(5, Math.round(5 + eased * (maxLen - 5)));
+    this.setState({ rangeValue: controlValue });
+    generateArray(length);
   }
 
   rewindArray = () => {
@@ -101,12 +83,10 @@ class Toolbar extends Component {
             </button>
             <ArraySizeControl
               value={rangeValue}
-              onChange={(val) => {
-                this.setState({ rangeValue: val });
-                this.handleChange({ target: { value: String(val) } });
-              }}
+              onChange={(val) => this.applyArraySize(val)}
               length={array.length}
               disabled={isRunning}
+              step={2}
             />
           </div>
           <div className="toolbar-center new-center-cluster">
