@@ -5,8 +5,10 @@
 // base delay of 220ms for 1x to keep things snappy yet visible, scaling inversely.
 // Feel free to tweak BASE_DELAY for UX.
 
-export const SPEED_LEVELS = [1, 3, 5, 8, 12, 15, 20];
-export const DEFAULT_SPEED = 5; // 5x default as requested
+// export const SPEED_LEVELS = [1, 3, 5, 8, 12, 15, 20];
+// export const DEFAULT_SPEED = 5; // 5x default
+export const SPEED_LEVELS = [1, 2, 3, 4, 5, 6, 7];
+export const DEFAULT_SPEED = 2; // 2x default
 
 const BASE_DELAY = 140; // ms at 1x (reduced for faster playback)
 
